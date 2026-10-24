@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://formsubmit.co; form-action https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://formsubmit.co https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://*.firebaseapp.com; form-action https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Santosh&rsquo;s Lab</title>
@@ -379,7 +379,7 @@ button.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 .nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 </style>
 <script>
-try { if (!localStorage.getItem('sl_member')) document.documentElement.classList.add('gated'); }
+try { if (localStorage.getItem('sl_auth') !== '1') document.documentElement.classList.add('gated'); }
 catch (e) { document.documentElement.classList.add('gated'); }
 </script>
 <style>
@@ -420,6 +420,14 @@ html.gated .gate {
 .gate-msg.err { color: #B3261E; }
 .gate-note { font-size: .75rem; color: var(--muted); text-align: center; }
 .gate .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.gate-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+.gate-tabs button { font: inherit; font-weight: 600; font-size: .9375rem; padding: .85rem; background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); cursor: pointer; }
+.gate-tabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.gate-form[hidden] { display: none; }
+.gate-form .link { font: inherit; font-size: .8125rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; justify-self: start; }
+.gate-msg.ok { color: var(--ok); }
+.pw-hint { font-size: .75rem; color: var(--muted); font-weight: 400; }
+html.checking .gate-card { opacity: .0; }
 .member { display: none; align-items: center; gap: .5rem; font-size: .8125rem; color: var(--muted); white-space: nowrap; }
 html.member-in .member { display: inline-flex; }
 .member button { font: inherit; font-size: .8125rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -447,15 +455,33 @@ html.member-in .member { display: inline-flex; }
     <div class="gate-top">
       <p class="k">Welcome to</p>
       <h2 id="gate-title">Santosh&rsquo;s Lab</h2>
-      <p>Create your free lab account to explore the interactive EduTech demos.</p>
+      <p>Sign in, or create a free lab account to explore the interactive EduTech demos.</p>
     </div>
-    <form class="gate-form" id="gate-form" novalidate>
+    <div class="gate-tabs" role="tablist">
+      <button type="button" role="tab" id="tab-in" aria-selected="true" aria-controls="form-in">Sign in</button>
+      <button type="button" role="tab" id="tab-up" aria-selected="false" aria-controls="form-up">Create account</button>
+    </div>
+
+    <form class="gate-form" id="form-in" role="tabpanel" aria-labelledby="tab-in" novalidate>
+      <label>Email (your username)
+        <input type="email" name="email" required maxlength="200" autocomplete="username">
+      </label>
+      <label>Password
+        <input type="password" name="password" required minlength="8" autocomplete="current-password">
+      </label>
+      <button type="button" class="link" id="forgot">Forgot password?</button>
+      <button type="submit" class="btn primary">Sign in</button>
+      <p class="gate-msg" role="status" aria-live="polite"></p>
+      <p class="gate-note">New here? <button type="button" class="link" data-go="up">Create an account</button> &middot; <a href="index.html">Back to home</a></p>
+    </form>
+
+    <form class="gate-form" id="form-up" role="tabpanel" aria-labelledby="tab-up" novalidate hidden>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <label>Full name
         <input type="text" name="name" required maxlength="120" autocomplete="name">
       </label>
-      <label>Email
-        <input type="email" name="email" required maxlength="200" autocomplete="email">
+      <label>Email (this will be your username)
+        <input type="email" name="email" required maxlength="200" autocomplete="username">
       </label>
       <div class="row">
         <label>I am a
@@ -472,10 +498,18 @@ html.member-in .member { display: inline-flex; }
           <input type="text" name="institution" required maxlength="200" autocomplete="organization">
         </label>
       </div>
+      <div class="row">
+        <label>Password <span class="pw-hint">(at least 8 characters)</span>
+          <input type="password" name="password" required minlength="8" autocomplete="new-password">
+        </label>
+        <label>Confirm password
+          <input type="password" name="confirm" required minlength="8" autocomplete="new-password">
+        </label>
+      </div>
       <label class="consent"><input type="checkbox" name="consent" required> <span>I agree that Santosh Kumar Gupta may keep these details and contact me about the lab. They are not shown publicly.</span></label>
       <button type="submit" class="btn primary">Create account &amp; enter the lab</button>
-      <p class="gate-msg" id="gate-msg" role="status" aria-live="polite"></p>
-      <p class="gate-note">Your browser will remember you, so you only sign up once on this device. <a href="index.html">Back to home</a></p>
+      <p class="gate-msg" role="status" aria-live="polite"></p>
+      <p class="gate-note">Already have an account? <button type="button" class="link" data-go="in">Sign in</button></p>
     </form>
   </div>
 </div>
@@ -900,62 +934,122 @@ html.member-in .member { display: inline-flex; }
   sync();
 })();
 
-/* ---------- Registration gate ---------- */
-(function () {
-  var KEY = 'sl_member', ENDPOINT = 'https://formsubmit.co/ajax/skgupta14696@gmail.com';
-  var root = document.documentElement, form = document.getElementById('gate-form'), msg = document.getElementById('gate-msg');
-  function read() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
-  function save(m) { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} }
-  function showMember(m) {
-    root.classList.remove('gated'); root.classList.add('member-in');
-    document.getElementById('member-name').textContent = 'Hi, ' + m.name.split(' ')[0];
-    document.querySelectorAll('main, .site-foot').forEach(function (el) { el.removeAttribute('aria-hidden'); });
-  }
-  var m = read();
-  if (m && m.name) showMember(m);
-  else {
-    root.classList.add('gated');
-    document.querySelectorAll('main, .site-foot').forEach(function (el) { el.setAttribute('aria-hidden', 'true'); });
-    setTimeout(function () { var f = form.querySelector('input[name="name"]'); if (f) f.focus(); }, 50);
-  }
-  document.getElementById('sign-out').addEventListener('click', function () {
-    try { localStorage.removeItem(KEY); } catch (e) {}
-    location.reload();
+</script>
+<script type="module">
+/* ---------- Santosh's Lab: accounts (Firebase Authentication) ---------- */
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { initializeAuth, browserLocalPersistence, onAuthStateChanged, createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, sendPasswordResetEmail, updateProfile, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBlcq0f82PapIpI3Bf5Fo1TOul0YmpHXfU",
+  authDomain: "santoshs-lab.firebaseapp.com",
+  projectId: "santoshs-lab",
+  storageBucket: "santoshs-lab.firebasestorage.app",
+  messagingSenderId: "18615591233",
+  appId: "1:18615591233:web:a39057796b5d37a47c01c0"
+};
+const NOTIFY = 'https://formsubmit.co/ajax/skgupta14696@gmail.com';
+
+const root = document.documentElement;
+const fIn = document.getElementById('form-in'), fUp = document.getElementById('form-up');
+const tabIn = document.getElementById('tab-in'), tabUp = document.getElementById('tab-up');
+const hint = v => { try { v ? localStorage.setItem('sl_auth', '1') : localStorage.removeItem('sl_auth'); localStorage.removeItem('sl_member'); } catch (e) {} };
+const say = (form, text, kind) => { const m = form.querySelector('.gate-msg'); m.className = 'gate-msg' + (kind ? ' ' + kind : ''); m.textContent = text; };
+const busy = (form, on, label) => { const b = form.querySelector('button[type="submit"]'); b.disabled = on; if (label) b.textContent = label; };
+
+function show(which) {
+  const up = which === 'up';
+  fIn.hidden = up; fUp.hidden = !up;
+  tabIn.setAttribute('aria-selected', String(!up)); tabUp.setAttribute('aria-selected', String(up));
+  const first = (up ? fUp : fIn).querySelector('input:not(.hp)'); if (first) first.focus();
+}
+tabIn.addEventListener('click', () => show('in'));
+tabUp.addEventListener('click', () => show('up'));
+document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => show(b.dataset.go)));
+
+function lock() {
+  if (!root.classList.contains('gated') || root.classList.contains('member-in')) show('in');
+  root.classList.add('gated'); root.classList.remove('member-in');
+  document.querySelectorAll('main, .site-foot').forEach(el => el.setAttribute('aria-hidden', 'true'));
+}
+function unlock(user) {
+  root.classList.remove('gated'); root.classList.add('member-in');
+  document.querySelectorAll('main, .site-foot').forEach(el => el.removeAttribute('aria-hidden'));
+  const n = (user.displayName || user.email || '').split(' ')[0];
+  document.getElementById('member-name').textContent = 'Hi, ' + n;
+}
+
+const friendly = code => ({
+  'auth/invalid-credential': 'Email or password is incorrect.',
+  'auth/wrong-password': 'Email or password is incorrect.',
+  'auth/user-not-found': 'Email or password is incorrect.',
+  'auth/invalid-email': 'Please enter a valid email address.',
+  'auth/email-already-in-use': 'An account with this email already exists. Please sign in instead.',
+  'auth/weak-password': 'Please choose a stronger password (at least 8 characters).',
+  'auth/too-many-requests': 'Too many attempts. Please wait a few minutes and try again.',
+  'auth/network-request-failed': 'Network problem. Please check your connection and try again.'
+}[code] || 'Something went wrong. Please try again.');
+
+if (!firebaseConfig) {
+  lock();
+  [fIn, fUp].forEach(f => { say(f, 'Lab accounts are being set up. Please check back soon.', 'err'); f.querySelectorAll('button[type="submit"]').forEach(b => b.disabled = true); });
+} else {
+  const app = initializeApp(firebaseConfig);
+  const auth = initializeAuth(app, { persistence: browserLocalPersistence });
+
+  onAuthStateChanged(auth, user => {
+    if (user) { hint(true); unlock(user); }
+    else { hint(false); lock(); }
   });
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    msg.className = 'gate-msg'; msg.textContent = '';
-    if (!form.checkValidity()) {
-      var bad = form.querySelector(':invalid');
-      msg.className = 'gate-msg err';
-      msg.textContent = bad && bad.name === 'consent' ? 'Please tick the agreement box to continue.' : 'Please fill in every field with valid details.';
-      if (bad) bad.focus();
-      return;
+
+  document.getElementById('sign-out').addEventListener('click', () => signOut(auth));
+
+  fIn.addEventListener('submit', async e => {
+    e.preventDefault(); say(fIn, '');
+    if (!fIn.checkValidity()) { say(fIn, 'Please enter your email and password.', 'err'); return; }
+    busy(fIn, true, 'Signing in…');
+    try { await signInWithEmailAndPassword(auth, fIn.email.value.trim(), fIn.password.value); fIn.reset(); }
+    catch (err) { say(fIn, friendly(err.code), 'err'); }
+    busy(fIn, false, 'Sign in');
+  });
+
+  document.getElementById('forgot').addEventListener('click', async () => {
+    const email = fIn.email.value.trim();
+    if (!email || !fIn.email.checkValidity()) { say(fIn, 'Type your email above, then click "Forgot password?" again.', 'err'); fIn.email.focus(); return; }
+    try { await sendPasswordResetEmail(auth, email); }
+    catch (err) { if (err.code === 'auth/invalid-email') { say(fIn, friendly(err.code), 'err'); return; } }
+    say(fIn, 'If an account exists for ' + email + ', a password reset link has been sent. Check your inbox and spam folder.', 'ok');
+  });
+
+  fUp.addEventListener('submit', async e => {
+    e.preventDefault(); say(fUp, '');
+    if (fUp._honey.value) return;
+    if (!fUp.checkValidity()) {
+      const bad = fUp.querySelector(':invalid');
+      say(fUp, bad && bad.name === 'consent' ? 'Please tick the agreement box to continue.'
+        : bad && bad.name.startsWith('pass') ? 'Password must be at least 8 characters.'
+        : 'Please fill in every field with valid details.', 'err');
+      if (bad) bad.focus(); return;
     }
-    if (form._honey.value) return;
-    var d = new FormData(form), member = {
-      name: d.get('name').toString().trim(), email: d.get('email').toString().trim(),
-      role: d.get('role').toString(), institution: d.get('institution').toString().trim(), joined: new Date().toISOString()
-    };
-    var btn = form.querySelector('button[type="submit"]');
-    btn.disabled = true; btn.textContent = 'Creating your account…';
-    var body = new FormData();
-    body.append('_subject', "New Santosh's Lab member: " + member.name);
-    body.append('_template', 'table');
-    body.append('_captcha', 'false');
-    body.append('Name', member.name);
-    body.append('email', member.email);
-    body.append('Role', member.role);
-    body.append('Institution', member.institution);
-    body.append('Consent', 'Agreed to be contacted about the lab');
-    fetch(ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: body })
-      .catch(function () { return null; })
-      .then(function () {
-        save(member); showMember(member);
-        var h = document.querySelector('.lab-hero h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
-      });
+    if (fUp.password.value !== fUp.confirm.value) { say(fUp, 'The two passwords do not match.', 'err'); fUp.confirm.focus(); return; }
+    const d = { name: fUp.name.value.trim(), email: fUp.email.value.trim(), role: fUp.role.value, institution: fUp.institution.value.trim() };
+    busy(fUp, true, 'Creating your account…');
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, d.email, fUp.password.value);
+      await updateProfile(cred.user, { displayName: d.name });
+      unlock(cred.user);
+      const body = new FormData();
+      body.append('_subject', "New Santosh's Lab member: " + d.name);
+      body.append('_template', 'table'); body.append('_captcha', 'false');
+      body.append('Name', d.name); body.append('email', d.email); body.append('Role', d.role);
+      body.append('Institution', d.institution); body.append('Consent', 'Agreed to be contacted about the lab');
+      fetch(NOTIFY, { method: 'POST', headers: { Accept: 'application/json' }, body }).catch(() => {});
+      fUp.reset();
+    } catch (err) { say(fUp, friendly(err.code), 'err'); }
+    busy(fUp, false, 'Create account & enter the lab');
   });
-})();
+}
 </script>
 </body>
 </html>
