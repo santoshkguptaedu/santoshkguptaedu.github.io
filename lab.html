@@ -378,6 +378,53 @@ button.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .join, :root:not([data-theme="light"]) .join h2 { color: #10121B; } :root:not([data-theme="light"]) .join .btn { background: #10121B; color: #E6E8F2; border-color: #10121B; } }
 .nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
 </style>
+<script>
+try { if (!localStorage.getItem('sl_member')) document.documentElement.classList.add('gated'); }
+catch (e) { document.documentElement.classList.add('gated'); }
+</script>
+<style>
+/* Registration gate */
+html.gated body { overflow: hidden; }
+html.gated main, html.gated .site-foot, html.gated .site-head .nav { filter: blur(7px); pointer-events: none; user-select: none; }
+.gate { display: none; }
+html.gated .gate {
+  display: grid; place-items: center; position: fixed; inset: 0; z-index: 50; padding: 16px; overflow-y: auto;
+  background: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+.gate-card {
+  width: min(100%, 30rem); background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 24px 60px -20px rgba(26, 30, 48, .45); overflow: hidden; margin: auto;
+}
+.gate-top {
+  color: #fff; padding: 1.25rem 1.5rem; position: relative; isolation: isolate;
+  background: linear-gradient(110deg, #2A3C9A 0%, #4A3FA8 60%, #A86A08 135%);
+}
+.gate-top::before { content: ""; position: absolute; inset: 0; z-index: -1; background: repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 8px, transparent 8px 16px); }
+.gate-top .k { font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+.gate-top h2 { color: #fff; font-size: var(--step-2); margin-top: .25rem; }
+.gate-top p { opacity: .9; font-size: .9rem; margin-top: .35rem; }
+.gate-form { display: grid; gap: .85rem; padding: 1.25rem 1.5rem 1.5rem; }
+.gate-form label { display: grid; gap: .3rem; font-size: .875rem; font-weight: 500; }
+.gate-form input, .gate-form select {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--line); border-radius: 8px; padding: .6rem .75rem; width: 100%;
+}
+.gate-form input:focus, .gate-form select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.gate-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+@media (max-width: 480px) { .gate-form .row { grid-template-columns: 1fr; } }
+.gate-form .consent { display: flex; gap: .55rem; align-items: flex-start; font-weight: 400; font-size: .8125rem; color: var(--muted); line-height: 1.45; }
+.gate-form .consent input { width: auto; margin-top: .15rem; accent-color: var(--accent); }
+.gate-form button { font: inherit; font-weight: 600; cursor: pointer; justify-content: center; padding: .75rem 1rem; }
+.gate-form button[disabled] { opacity: .6; cursor: progress; }
+.gate-msg { font-size: .875rem; min-height: 1.2em; }
+.gate-msg.err { color: #B3261E; }
+.gate-note { font-size: .75rem; color: var(--muted); text-align: center; }
+.gate .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.member { display: none; align-items: center; gap: .5rem; font-size: .8125rem; color: var(--muted); white-space: nowrap; }
+html.member-in .member { display: inline-flex; }
+.member button { font: inherit; font-size: .8125rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 640px) { .member { order: -1; } }
+</style>
 </head>
 <body>
 <header class="site-head">
@@ -391,8 +438,47 @@ button.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
       <a href="#ideas">Ideas</a>
       <a href="#join">Collaborate</a>
     </nav>
+    <span class="member" id="member"><span id="member-name"></span><button type="button" id="sign-out">Sign out</button></span>
   </div>
 </header>
+
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate-card">
+    <div class="gate-top">
+      <p class="k">Welcome to</p>
+      <h2 id="gate-title">Santosh&rsquo;s Lab</h2>
+      <p>Create your free lab account to explore the interactive EduTech demos.</p>
+    </div>
+    <form class="gate-form" id="gate-form" novalidate>
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label>Full name
+        <input type="text" name="name" required maxlength="120" autocomplete="name">
+      </label>
+      <label>Email
+        <input type="email" name="email" required maxlength="200" autocomplete="email">
+      </label>
+      <div class="row">
+        <label>I am a
+          <select name="role" required>
+            <option value="">Choose&hellip;</option>
+            <option>Student</option>
+            <option>Teacher</option>
+            <option>Teacher educator</option>
+            <option>Researcher</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Institution
+          <input type="text" name="institution" required maxlength="200" autocomplete="organization">
+        </label>
+      </div>
+      <label class="consent"><input type="checkbox" name="consent" required> <span>I agree that Santosh Kumar Gupta may keep these details and contact me about the lab. They are not shown publicly.</span></label>
+      <button type="submit" class="btn primary">Create account &amp; enter the lab</button>
+      <p class="gate-msg" id="gate-msg" role="status" aria-live="polite"></p>
+      <p class="gate-note">Your browser will remember you, so you only sign up once on this device. <a href="index.html">Back to home</a></p>
+    </form>
+  </div>
+</div>
 
 <main id="top">
   <!-- ===== LAB INTRO ===== -->
@@ -812,6 +898,63 @@ button.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
   window.addEventListener('resize', function () { if (!anim) { fit(); scene(); } });
   fit();
   sync();
+})();
+
+/* ---------- Registration gate ---------- */
+(function () {
+  var KEY = 'sl_member', ENDPOINT = 'https://formsubmit.co/ajax/skgupta14696@gmail.com';
+  var root = document.documentElement, form = document.getElementById('gate-form'), msg = document.getElementById('gate-msg');
+  function read() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function save(m) { try { localStorage.setItem(KEY, JSON.stringify(m)); } catch (e) {} }
+  function showMember(m) {
+    root.classList.remove('gated'); root.classList.add('member-in');
+    document.getElementById('member-name').textContent = 'Hi, ' + m.name.split(' ')[0];
+    document.querySelectorAll('main, .site-foot').forEach(function (el) { el.removeAttribute('aria-hidden'); });
+  }
+  var m = read();
+  if (m && m.name) showMember(m);
+  else {
+    root.classList.add('gated');
+    document.querySelectorAll('main, .site-foot').forEach(function (el) { el.setAttribute('aria-hidden', 'true'); });
+    setTimeout(function () { var f = form.querySelector('input[name="name"]'); if (f) f.focus(); }, 50);
+  }
+  document.getElementById('sign-out').addEventListener('click', function () {
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    location.reload();
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.className = 'gate-msg'; msg.textContent = '';
+    if (!form.checkValidity()) {
+      var bad = form.querySelector(':invalid');
+      msg.className = 'gate-msg err';
+      msg.textContent = bad && bad.name === 'consent' ? 'Please tick the agreement box to continue.' : 'Please fill in every field with valid details.';
+      if (bad) bad.focus();
+      return;
+    }
+    if (form._honey.value) return;
+    var d = new FormData(form), member = {
+      name: d.get('name').toString().trim(), email: d.get('email').toString().trim(),
+      role: d.get('role').toString(), institution: d.get('institution').toString().trim(), joined: new Date().toISOString()
+    };
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Creating your account…';
+    var body = new FormData();
+    body.append('_subject', "New Santosh's Lab member: " + member.name);
+    body.append('_template', 'table');
+    body.append('_captcha', 'false');
+    body.append('Name', member.name);
+    body.append('email', member.email);
+    body.append('Role', member.role);
+    body.append('Institution', member.institution);
+    body.append('Consent', 'Agreed to be contacted about the lab');
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: body })
+      .catch(function () { return null; })
+      .then(function () {
+        save(member); showMember(member);
+        var h = document.querySelector('.lab-hero h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+      });
+  });
 })();
 </script>
 </body>
