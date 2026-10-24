@@ -476,7 +476,6 @@ html.member-in .member { display: inline-flex; }
     </form>
 
     <form class="gate-form" id="form-up" role="tabpanel" aria-labelledby="tab-up" novalidate hidden>
-      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <label>Full name
         <input type="text" name="name" required maxlength="120" autocomplete="name">
       </label>
@@ -1024,7 +1023,6 @@ if (!firebaseConfig) {
 
   fUp.addEventListener('submit', async e => {
     e.preventDefault(); say(fUp, '');
-    if (fUp._honey.value) return;
     if (!fUp.checkValidity()) {
       const bad = fUp.querySelector(':invalid');
       say(fUp, bad && bad.name === 'consent' ? 'Please tick the agreement box to continue.'
