@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://formsubmit.co; form-action https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EduTech Creative Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="EduTech Creative Lab by Santosh Kumar Gupta: interactive demos, projects and ideas on enhancing learning with educational technology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Devanagari:wght@400;500&display=swap">
+<style>
+/* Layout: sticky name bar; two-column hero (statement + assessment-loop figure); research lines as a lab register; ink-indigo with a marigold signal for "status" */
+:root {
+  --paper: #F5F6FA;
+  --surface: #FFFFFF;
+  --ink: #1A1E30;
+  --muted: #565C76;
+  --line: #DCDFEB;
+  --accent: #2A3C9A;
+  --accent-soft: #E6E9F7;
+  --signal: #A86A08;
+  --signal-soft: #FAEFD9;
+  --ok: #24704F;
+  --ok-soft: #E1F1E8;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-body: "IBM Plex Sans", "IBM Plex Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-deva: "IBM Plex Sans Devanagari", "Noto Sans Devanagari", "Mangal", sans-serif;
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: 2.125rem;
+  --step-4: clamp(2.5rem, 5vw + 1rem, 3.75rem);
+  --wrap: 68rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10121B; --surface: #171A26; --ink: #E6E8F2; --muted: #A0A5BE; --line: #2A2E42;
+    --accent: #9CAAFF; --accent-soft: #222949; --signal: #E8B24A; --signal-soft: #3A2D14;
+    --ok: #6BC79A; --ok-soft: #15301F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10121B; --surface: #171A26; --ink: #E6E8F2; --muted: #A0A5BE; --line: #2A2E42;
+  --accent: #9CAAFF; --accent-soft: #222949; --signal: #E8B24A; --signal-soft: #3A2D14;
+  --ok: #6BC79A; --ok-soft: #15301F; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--surface);
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+.deva { font-family: var(--font-deva); }
+
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) {
+  .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); }
+}
+
+/* Header */
+.site-head {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.site-head .wrap { display: flex; align-items: center; gap: 1.5rem; min-height: 3.75rem; }
+.brand { font-family: var(--font-display); font-size: var(--step-1); font-weight: 600; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.nav { display: flex; gap: 1.25rem; margin-left: auto; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.nav::-webkit-scrollbar { display: none; }
+.nav a { color: var(--muted); text-decoration: none; font-size: 0.9375rem; white-space: nowrap; padding-block: 0.25rem; }
+.nav a:hover { color: var(--ink); }
+@media (max-width: 640px) {
+  .site-head .wrap { flex-direction: column; align-items: flex-start; gap: 0; padding-block: 0.5rem; }
+  .nav { margin-left: 0; width: 100%; gap: 1rem; }
+}
+
+/* Hero */
+.hero { padding-block: 3.5rem 3rem; border-bottom: 1px solid var(--line); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; gap: 2.5rem; } }
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted);
+}
+.hero h1 { font-size: var(--step-4); line-height: 1.05; margin-top: 0.75rem; }
+.id-row { display: flex; align-items: center; gap: 1.5rem; }
+.portrait {
+  flex: none; width: 11.5rem; height: 11.5rem; border-radius: 50%; object-fit: cover;
+  border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgba(26, 30, 48, 0.12);
+}
+@media (max-width: 520px) {
+  .id-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .portrait { width: 9.5rem; height: 9.5rem; }
+}
+.id-row h1 { font-size: clamp(2.25rem, 2.4vw + 1rem, 3.25rem); }
+.lede { font-family: var(--font-display); font-size: var(--step-2); line-height: 1.35; margin-top: 1.25rem; max-width: 34ch; }
+.lede em { color: var(--accent); }
+.hero .bio { color: var(--muted); margin-top: 1.25rem; max-width: 60ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.1rem; border-radius: 6px; font-weight: 500; font-size: 0.9375rem;
+  text-decoration: none; border: 1px solid var(--accent);
+}
+.btn.primary { background: var(--accent); color: var(--surface); }
+.btn.ghost { color: var(--accent); background: transparent; }
+.btn:hover { filter: brightness(1.08); }
+
+.figure {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 1.25rem 1.25rem 1rem;
+}
+.figure svg { display: block; width: 100%; height: auto; max-width: 100%; }
+.figure figcaption { font-size: var(--step--1); color: var(--muted); margin-top: 0.5rem; line-height: 1.5; }
+.figure figcaption strong { color: var(--signal); font-weight: 600; }
+
+/* Sections */
+section.block { padding-block: 4rem; border-bottom: 1px solid var(--line); }
+.sec-head { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; max-width: 62ch; }
+.sec-head h2 { font-size: var(--step-3); line-height: 1.15; }
+.sec-head p { color: var(--muted); }
+
+/* Research register */
+.lines { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.line {
+  display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 2rem;
+  padding-block: 2rem; border-bottom: 1px solid var(--line);
+}
+@media (max-width: 760px) { .line { grid-template-columns: 1fr; gap: 0.75rem; } }
+.line-meta { display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start; }
+.role { font-size: var(--step--1); color: var(--muted); }
+.chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.03em;
+  padding: 0.2rem 0.55rem; border-radius: 999px; white-space: nowrap;
+}
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.active { color: var(--ok); background: var(--ok-soft); }
+.chip.proposed { color: var(--accent); background: var(--accent-soft); }
+.chip.pending { color: var(--signal); background: var(--signal-soft); }
+.line-body { min-width: 0; display: flex; flex-direction: column; gap: 0.9rem; }
+.line-body h3 { font-size: var(--step-2); line-height: 1.25; }
+.line-body p { max-width: 65ch; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; list-style: none; margin: 0; padding: 0; }
+.tags li { font-size: 0.8125rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0.1rem 0.5rem; }
+
+.stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+@media (max-width: 520px) { .stages { grid-template-columns: 1fr; } }
+.stage { border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.35rem; }
+.stage-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.stage-name { font-weight: 600; font-size: 0.9375rem; }
+.stage p { font-size: 0.9rem; color: var(--muted); }
+.figures { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Publications */
+.pubs { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; }
+.pub { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1.5rem; }
+@media (max-width: 640px) { .pub { grid-template-columns: 1fr; gap: 0.4rem; } }
+.pub-type { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-top: 0.2rem; }
+.pub-body { min-width: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.pub-title { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.35; }
+.pub-cite { color: var(--muted); font-size: 0.9375rem; }
+.pub-cite i { color: var(--ink); }
+
+/* Conferences */
+.timeline { display: grid; gap: 0; }
+.year { font-family: var(--font-display); font-size: var(--step-3); color: var(--line); font-weight: 600; line-height: 1; margin-bottom: 0.5rem; }
+:root .year { color: var(--muted); opacity: 0.45; }
+.event { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1.5rem; padding-block: 1.25rem; border-top: 1px solid var(--line); }
+@media (max-width: 640px) { .event { grid-template-columns: 1fr; gap: 0.4rem; } }
+.event-date { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--muted); padding-top: 0.15rem; font-variant-numeric: tabular-nums; }
+.event-body { min-width: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.event-body h3 { font-size: var(--step-1); font-family: var(--font-body); font-weight: 600; }
+.event-body .where { color: var(--muted); font-size: 0.9375rem; }
+.event-body .talk { font-family: var(--font-display); font-style: italic; font-size: var(--step-1); }
+
+.model { margin: 0.25rem 0 0; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; max-width: 40rem; }
+.model img { display: block; width: 100%; height: auto; border-radius: 4px; }
+.model figcaption { font-size: var(--step--1); color: var(--muted); margin-top: 0.75rem; line-height: 1.5; }
+.model figcaption strong { color: var(--ink); font-weight: 600; }
+@media (prefers-color-scheme: dark) { .model { background: var(--surface); } .model a { display: block; background: #fff; border-radius: 6px; padding: 0.5rem; } }
+
+/* Awards */
+.awards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.award {
+  display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: 1.25rem;
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--signal);
+  border-radius: 8px; padding: 1.25rem 1.4rem;
+}
+@media (max-width: 640px) { .award { grid-template-columns: 1fr; gap: 0.35rem; } }
+.award-year { font-family: var(--font-display); font-size: var(--step-2); color: var(--signal); line-height: 1.2; font-variant-numeric: tabular-nums; }
+.award-body { min-width: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.award-body h3 { font-family: var(--font-body); font-size: var(--step-1); font-weight: 600; }
+.award-body .where { color: var(--muted); font-size: 0.9375rem; }
+.award-body .talk { font-size: 0.9375rem; }
+
+/* Service */
+.service { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
+.service li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.service h3 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; }
+.service p { color: var(--muted); font-size: 0.9375rem; }
+
+/* CV & contact */
+.cv-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 3rem; }
+@media (max-width: 820px) { .cv-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+.cv-grid h3 { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 1rem; }
+.edu { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.edu li { display: flex; flex-direction: column; gap: 0.15rem; }
+.edu .deg { font-family: var(--font-display); font-size: var(--step-1); }
+.edu .inst { color: var(--muted); font-size: 0.9375rem; }
+.interests { margin-top: 2rem; }
+.contact { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.contact dl { margin: 0; display: grid; gap: 1rem; }
+.contact dt { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.contact dd { margin: 0.2rem 0 0; overflow-wrap: anywhere; }
+.profiles { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
+.msg-form { display: grid; gap: 0.85rem; border-top: 1px solid var(--line); padding-top: 1.25rem; }
+.msg-title { font-family: var(--font-display) !important; font-size: var(--step-1) !important; text-transform: none !important; letter-spacing: 0 !important; color: var(--ink) !important; margin: 0 !important; }
+.msg-form label { display: grid; gap: 0.3rem; font-size: 0.875rem; font-weight: 500; color: var(--ink); }
+.msg-form .opt { color: var(--muted); font-weight: 400; }
+.msg-form input, .msg-form textarea {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.75rem; width: 100%;
+}
+.msg-form textarea { resize: vertical; min-height: 7rem; }
+.msg-form input:focus, .msg-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.msg-form button { justify-self: start; cursor: pointer; font: inherit; font-weight: 500; }
+.msg-form button[disabled] { opacity: 0.6; cursor: progress; }
+.msg-status { font-size: 0.9rem; min-height: 1.2em; }
+.msg-status.ok { color: var(--ok); }
+.msg-status.err { color: #B3261E; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.site-foot { padding-block: 2rem 2.5rem; color: var(--muted); font-size: var(--step--1); }
+.site-foot .wrap { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; }
+
+/* ===== Lab page ===== */
+.lab-hero { padding-block: 3.5rem 3rem; border-bottom: 1px solid var(--line); }
+.lab-hero .wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+@media (max-width: 860px) { .lab-hero .wrap { grid-template-columns: 1fr; gap: 2rem; } }
+.lab-hero h1 { font-size: var(--step-4); line-height: 1.05; margin-top: 0.75rem; }
+.objective {
+  background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent);
+  border-radius: 8px; padding: 1.1rem 1.25rem; margin-top: 1.5rem; max-width: 60ch;
+}
+.objective .eyebrow { margin-bottom: 0.35rem; }
+.objective p:last-child { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.4; }
+.pillars { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.pillars li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.pillars strong { font-weight: 600; font-size: 0.9375rem; }
+.pillars span { color: var(--muted); font-size: 0.875rem; line-height: 1.45; }
+.pillars .n { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); }
+
+/* Demo shell */
+.demos { display: grid; gap: 2rem; }
+.demo { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.demo-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 0.35rem; }
+.demo-head h3 { font-size: var(--step-2); line-height: 1.25; }
+.demo-head p { color: var(--muted); max-width: 70ch; }
+.demo-body { padding: 1.5rem; }
+.why { font-size: 0.875rem; color: var(--muted); padding: 0.9rem 1.5rem; border-top: 1px solid var(--line); background: var(--paper); }
+.why strong { color: var(--ink); font-weight: 600; }
+button.btn { cursor: pointer; font: inherit; font-weight: 500; }
+button.btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+/* Quiz */
+.quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.meter { display: flex; gap: 0.3rem; }
+.meter i { width: 1.6rem; height: 0.4rem; border-radius: 99px; background: var(--line); }
+.meter i.on { background: var(--accent); }
+.qmeta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.qtext { font-family: var(--font-display); font-size: var(--step-1); line-height: 1.4; margin-bottom: 1rem; max-width: 60ch; }
+.opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+@media (max-width: 560px) { .opts { grid-template-columns: 1fr; } }
+.opt-btn {
+  text-align: left; font: inherit; color: var(--ink); background: var(--paper); cursor: pointer;
+  border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem 0.9rem;
+}
+.opt-btn:hover:not([disabled]) { border-color: var(--accent); }
+.opt-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt-btn.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt-btn.wrong { border-color: #B3261E; background: color-mix(in srgb, #B3261E 10%, var(--surface)); }
+.opt-btn[disabled] { cursor: default; }
+.conf { margin-top: 1.1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
+.conf > span { font-size: 0.9rem; font-weight: 500; margin-right: 0.25rem; }
+.feedback { margin-top: 1.1rem; border-radius: 8px; padding: 0.9rem 1rem; font-size: 0.9375rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.feedback.good { background: var(--ok-soft); }
+.feedback.warn { background: var(--signal-soft); }
+.feedback .tag { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.feedback.good .tag { color: var(--ok); }
+.feedback.warn .tag { color: var(--signal); }
+.quiz-actions { margin-top: 1.1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.profile { display: grid; gap: 1.25rem; }
+.profile h4 { font-family: var(--font-display); font-weight: 500; font-size: var(--step-2); margin: 0; }
+.bars { display: grid; gap: 0.75rem; }
+.bar-row { display: grid; grid-template-columns: 6rem minmax(0, 1fr) 3rem; gap: 0.75rem; align-items: center; font-size: 0.9rem; }
+.bar { height: 0.6rem; background: var(--line); border-radius: 99px; overflow: hidden; }
+.bar b { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.bar-row .pct { font-family: var(--font-mono); font-size: 0.8125rem; text-align: right; font-variant-numeric: tabular-nums; }
+.calib { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+@media (max-width: 560px) { .calib { grid-template-columns: 1fr; } }
+.calib div { border: 1px solid var(--line); border-radius: 8px; padding: 0.7rem 0.9rem; background: var(--paper); }
+.calib b { font-family: var(--font-display); font-size: var(--step-2); font-weight: 500; display: block; line-height: 1.1; }
+.calib span { font-size: 0.8125rem; color: var(--muted); }
+.next-steps { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.35rem; font-size: 0.9375rem; }
+
+/* Simulation */
+.sim { display: grid; grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: 1.5rem; }
+@media (max-width: 760px) { .sim { grid-template-columns: 1fr; } }
+.controls { display: grid; gap: 1rem; align-content: start; }
+.controls label { display: grid; gap: 0.35rem; font-size: 0.875rem; font-weight: 500; }
+.controls output { font-family: var(--font-mono); font-weight: 400; color: var(--accent); float: right; }
+.controls input[type=range] { width: 100%; accent-color: var(--accent); }
+.controls input[type=number] { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 0.5rem 0.7rem; width: 100%; }
+.stage { min-width: 0; }
+.stage canvas { display: block; width: 100%; height: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
+.readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.75rem; }
+.readout div { border: 1px solid var(--line); border-radius: 8px; padding: 0.55rem 0.75rem; }
+.readout span { display: block; font-size: 0.75rem; color: var(--muted); }
+.readout b { font-family: var(--font-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.sim-msg { margin-top: 0.75rem; font-size: 0.9375rem; min-height: 1.4em; }
+
+/* Projects */
+.projects { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
+.project { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.project h3 { font-size: var(--step-1); line-height: 1.3; }
+.project p { color: var(--muted); font-size: 0.9375rem; }
+.project .for { font-size: 0.875rem; color: var(--ink); border-top: 1px dashed var(--line); padding-top: 0.6rem; margin-top: auto; }
+.project .for b { font-weight: 600; }
+
+/* Ideas */
+.ideas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: 1rem; }
+.idea { border-top: 3px solid var(--accent); padding-top: 0.9rem; display: flex; flex-direction: column; gap: 0.45rem; }
+.idea h3 { font-family: var(--font-body); font-weight: 600; font-size: 1.0625rem; }
+.idea p { color: var(--muted); font-size: 0.9375rem; }
+.idea .try { font-size: 0.875rem; color: var(--ink); }
+.resources { margin-top: 2.5rem; }
+.resources h3 { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 1rem; }
+.res-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 0.75rem; }
+.res-list li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0.85rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.res-list a { font-weight: 600; text-decoration: none; }
+.res-list a:hover { text-decoration: underline; }
+.res-list span { font-size: 0.875rem; color: var(--muted); }
+
+/* Join */
+.join { background: var(--accent); color: #fff; border-radius: 14px; padding: 2rem; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; align-items: center; }
+@media (max-width: 760px) { .join { grid-template-columns: 1fr; padding: 1.5rem; } }
+.join h2 { font-size: var(--step-3); line-height: 1.15; color: #fff; }
+.join p { opacity: 0.92; margin-top: 0.75rem; max-width: 55ch; }
+.join ul { margin: 0; padding-left: 1.2rem; display: grid; gap: 0.4rem; }
+.join .btn { background: #fff; color: #1A1E30; border-color: #fff; margin-top: 1.25rem; }
+:root[data-theme="dark"] .join, :root[data-theme="dark"] .join h2 { color: #10121B; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .join, :root:not([data-theme="light"]) .join h2 { color: #10121B; } :root:not([data-theme="light"]) .join .btn { background: #10121B; color: #E6E8F2; border-color: #10121B; } }
+.nav a[aria-current="page"] { color: var(--ink); font-weight: 600; }
+</style>
+</head>
+<body>
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="index.html">Santosh Kumar Gupta</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="index.html">Home</a>
+      <a href="lab.html" aria-current="page">Creative Lab</a>
+      <a href="#demos">Demos</a>
+      <a href="#projects">Projects</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#join">Collaborate</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ===== LAB INTRO ===== -->
+  <section class="lab-hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">EduTech Creative Lab &middot; University of Hyderabad</p>
+        <h1>Enhancing learning with educational technology</h1>
+        <p class="bio" style="color:var(--muted);margin-top:1.25rem;max-width:60ch">A small open lab where I design, try out and share ways technology can make learning more visible, more responsive and more inclusive, from instant formative feedback to simulations and AI-supported assessment.</p>
+        <div class="objective">
+          <p class="eyebrow">Objective of the lab</p>
+          <p>To enhance learning with EduTech: tools that help learners understand, and help teachers know their learners.</p>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="#demos">Try the demos</a>
+          <a class="btn ghost" href="#join">Collaborate</a>
+        </div>
+      </div>
+      <ul class="pillars" aria-label="Lab principles">
+        <li><span class="n">01</span><strong>Feedback that teaches</strong><span>Immediate, specific feedback while the learner is still thinking.</span></li>
+        <li><span class="n">02</span><strong>Learning made visible</strong><span>Simulations and visuals that turn abstract ideas into something to explore.</span></li>
+        <li><span class="n">03</span><strong>Personalised paths</strong><span>Tasks that adapt to what each learner already knows.</span></li>
+        <li><span class="n">04</span><strong>Teacher in the loop</strong><span>Technology supports teachers' judgement and never replaces it.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== DEMOS ===== -->
+  <section class="block" id="demos">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Interactive demos</p>
+        <h2>Try it yourself</h2>
+        <p>Two small demonstrations of how EduTech can enhance learning. Both run in your browser, and nothing you enter is saved or sent anywhere.</p>
+      </div>
+
+      <div class="demos">
+        <!-- Demo 1: adaptive quiz -->
+        <article class="demo" id="quiz-demo">
+          <div class="demo-head">
+            <p class="eyebrow">Demo 1 &middot; Formative assessment</p>
+            <h3>Adaptive physics check-in with confidence</h3>
+            <p>Six questions on motion, force and energy. The difficulty adapts to your answers, and you say how sure you are before seeing the result. At the end you get a learner profile, not just a score.</p>
+          </div>
+          <div class="demo-body" id="quiz" aria-live="polite"></div>
+          <p class="why"><strong>How this enhances learning:</strong> Instant, explained feedback corrects ideas at the moment they form. Asking for confidence separates a lucky guess from real understanding, and a confident wrong answer from a simple gap. That is what a teacher needs to know to respond well.</p>
+        </article>
+
+        <!-- Demo 2: projectile simulation -->
+        <article class="demo" id="sim-demo">
+          <div class="demo-head">
+            <p class="eyebrow">Demo 2 &middot; Simulation</p>
+            <h3>Predict, observe, explain: projectile motion</h3>
+            <p>Choose a launch speed and angle, predict how far the ball will land, then launch it. Compare your prediction with what happens and try to explain the difference.</p>
+          </div>
+          <div class="demo-body">
+            <div class="sim">
+              <div class="controls">
+                <label><span>Launch speed <output id="v-out">20 m/s</output></span>
+                  <input type="range" id="v" min="5" max="30" step="1" value="20">
+                </label>
+                <label><span>Launch angle <output id="a-out">45&deg;</output></span>
+                  <input type="range" id="a" min="10" max="80" step="1" value="45">
+                </label>
+                <label>Your prediction: range in metres
+                  <input type="number" id="guess" min="0" max="100" step="1" placeholder="e.g. 35">
+                </label>
+                <button class="btn primary" id="launch" type="button">Launch</button>
+              </div>
+              <div class="stage">
+                <canvas id="cv" width="720" height="380" aria-label="Projectile motion simulation"></canvas>
+                <div class="readout">
+                  <div><span>Range</span><b id="r-range">&ndash;</b></div>
+                  <div><span>Max height</span><b id="r-height">&ndash;</b></div>
+                  <div><span>Time of flight</span><b id="r-time">&ndash;</b></div>
+                </div>
+                <p class="sim-msg" id="sim-msg">Set a prediction, then press Launch. (g = 9.8 m/s&sup2;, no air resistance)</p>
+              </div>
+            </div>
+          </div>
+          <p class="why"><strong>How this enhances learning:</strong> Predicting first makes learners commit to an idea, and the simulation then tests it. Earlier trajectories stay on screen, so learners can discover patterns themselves, such as 45&deg; giving the longest range and 30&deg; and 60&deg; landing at the same spot.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section class="block" id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Lab projects</p>
+        <h2>What the lab is working on</h2>
+      </div>
+      <ul class="projects">
+        <li class="project">
+          <span class="chip active">Doctoral study</span>
+          <h3>Automated formative assessment in school education</h3>
+          <p>Designing and evaluating automated formative assessment that uses multidimensional learner data to support teachers' decisions.</p>
+          <p class="for"><b>For learning:</b> timely feedback grounded in who the learner is, not only in their marks.</p>
+        </li>
+        <li class="project">
+          <span class="chip active">Published</span>
+          <h3>LLMs for assessment and feedback in physics</h3>
+          <p>Evaluating how well large language models assess students' physics answers and give feedback (<i>Journal of Education Technology</i>, 2025).</p>
+          <p class="for"><b>For learning:</b> knowing where AI feedback can be trusted, and where a teacher must check it.</p>
+        </li>
+        <li class="project">
+          <span class="chip proposed">Proposed</span>
+          <h3>Physics-grounded multimodal AI for handwritten answers</h3>
+          <p>A multimodal model reads handwritten mechanics answers and diagrams, and physics rules check the reasoning.</p>
+          <p class="for"><b>For learning:</b> fast, faithful feedback on the way students actually write physics.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== IDEAS & RESOURCES ===== -->
+  <section class="block" id="ideas">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ideas &amp; resources</p>
+        <h2>How EduTech enhances learning</h2>
+        <p>Six ideas the lab builds on, each with something a teacher can try tomorrow.</p>
+      </div>
+      <ul class="ideas">
+        <li class="idea">
+          <h3>Immediate feedback</h3>
+          <p>Feedback works best while the learner still remembers their reasoning. Digital tools can respond in seconds instead of days.</p>
+          <p class="try"><b>Try:</b> a two-minute exit quiz that explains each answer.</p>
+        </li>
+        <li class="idea">
+          <h3>Retrieval practice</h3>
+          <p>Recalling knowledge strengthens it more than re-reading. Low-stakes quizzes make recall a habit.</p>
+          <p class="try"><b>Try:</b> start each class with three questions from last week.</p>
+        </li>
+        <li class="idea">
+          <h3>Personalisation</h3>
+          <p>Adaptive tasks let each learner work where they are ready to grow, neither bored nor lost.</p>
+          <p class="try"><b>Try:</b> offer two levels of the same task and let results decide the next one.</p>
+        </li>
+        <li class="idea">
+          <h3>Simulation and visualisation</h3>
+          <p>Seeing a process change as you control it builds intuition that a static diagram cannot.</p>
+          <p class="try"><b>Try:</b> predict, observe, explain with a free simulation.</p>
+        </li>
+        <li class="idea">
+          <h3>Learner data, used with care</h3>
+          <p>Data on progress, confidence and engagement helps teachers notice who needs support, if it is read alongside knowledge of the child.</p>
+          <p class="try"><b>Try:</b> ask learners to rate their confidence with each answer.</p>
+        </li>
+        <li class="idea">
+          <h3>AI as a thinking partner</h3>
+          <p>AI can generate examples, questions and first-draft feedback. Teachers check, adapt and decide.</p>
+          <p class="try"><b>Try:</b> ask an AI for three misconceptions about a topic, then design questions that reveal them.</p>
+        </li>
+      </ul>
+
+      <div class="resources">
+        <h3>Useful free platforms</h3>
+        <ul class="res-list">
+          <li><a href="https://diksha.gov.in/" rel="noopener" target="_blank">DIKSHA</a><span>National platform for school education content and teacher training.</span></li>
+          <li><a href="https://swayam.gov.in/" rel="noopener" target="_blank">SWAYAM</a><span>Free online courses, including teacher education.</span></li>
+          <li><a href="https://phet.colorado.edu/" rel="noopener" target="_blank">PhET Simulations</a><span>Free interactive science and maths simulations.</span></li>
+          <li><a href="https://ncert.nic.in/" rel="noopener" target="_blank">NCERT</a><span>Textbooks, e-content and curriculum resources.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== JOIN ===== -->
+  <section class="block" id="join">
+    <div class="wrap">
+      <div class="join">
+        <div>
+          <h2>Collaborate with the lab</h2>
+          <p>Teachers, students and researchers interested in using technology to enhance learning are welcome. Write to me with an idea, a classroom problem or a tool you would like to test.</p>
+          <a class="btn" href="index.html#msg-form">Send me a message</a>
+        </div>
+        <ul>
+          <li>Try a lab tool in your classroom</li>
+          <li>Co-design an assessment or simulation</li>
+          <li>Collaborate on research or a paper</li>
+          <li>Suggest a topic for a new demo</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>&copy; 2026 Santosh Kumar Gupta &middot; EduTech Creative Lab</span>
+    <a href="index.html">Back to home</a>
+  </div>
+</footer>
+
+<script>
+/* ---------- Demo 1: adaptive quiz with confidence ---------- */
+(function () {
+  var BANK = [
+    { c: 'Motion', l: 1, q: 'A car travels 100 km in 2 hours. What is its average speed?', o: ['25 km/h', '50 km/h', '100 km/h', '200 km/h'], a: 1,
+      e: 'Average speed = total distance ÷ total time = 100 km ÷ 2 h = 50 km/h.' },
+    { c: 'Force', l: 1, q: 'What is the SI unit of force?', o: ['joule', 'watt', 'newton', 'pascal'], a: 2,
+      e: 'Force is measured in newtons (N). 1 N = 1 kg·m/s².' },
+    { c: 'Energy', l: 1, q: 'The energy a body has because of its motion is called…', o: ['potential energy', 'kinetic energy', 'heat energy', 'chemical energy'], a: 1,
+      e: 'Kinetic energy is energy of motion: KE = ½mv².' },
+    { c: 'Motion', l: 2, q: 'A ball is thrown straight up. At its highest point, what are its velocity and acceleration?', o: ['v = 0, a = 0', 'v = 0, a = g downward', 'v is maximum, a = 0', 'v = g, a = 0'], a: 1,
+      e: 'The ball stops for an instant, so v = 0, but gravity still acts, so acceleration is still g downward. A common misconception is that a = 0 at the top.' },
+    { c: 'Force', l: 2, q: 'A book rests on a table. What is the net force on the book?', o: ['Equal to its weight, downward', 'Zero', 'Equal to its weight, upward', 'It depends on the table'], a: 1,
+      e: 'The table pushes up with a force equal to the weight, so the forces balance and the net force is zero. That is why the book stays at rest.' },
+    { c: 'Energy', l: 2, q: 'A 2 kg object is lifted to a height of 5 m. Taking g = 10 m/s², what is its gain in potential energy?', o: ['10 J', '50 J', '100 J', '20 J'], a: 2,
+      e: 'PE = mgh = 2 × 10 × 5 = 100 J.' },
+    { c: 'Motion', l: 3, q: 'A 1 kg ball and a 5 kg ball are dropped together from the same height. Ignoring air resistance, which lands first?', o: ['The 5 kg ball', 'The 1 kg ball', 'They land together', 'It depends on the height'], a: 2,
+      e: 'Without air resistance all bodies fall with the same acceleration g, whatever their mass, so they land together.' },
+    { c: 'Force', l: 3, q: 'A 2 kg block is pushed with 10 N while friction of 4 N acts against it. What is its acceleration?', o: ['5 m/s²', '3 m/s²', '7 m/s²', '2 m/s²'], a: 1,
+      e: 'Net force = 10 − 4 = 6 N. a = F/m = 6 ÷ 2 = 3 m/s².' },
+    { c: 'Energy', l: 3, q: 'If the speed of a moving body doubles, its kinetic energy becomes…', o: ['2 times', '4 times', 'half', 'unchanged'], a: 1,
+      e: 'KE = ½mv². Doubling v multiplies v² by 4, so KE becomes 4 times.' }
+  ];
+  var TOTAL = 6, CONCEPTS = ['Motion', 'Force', 'Energy'];
+  var root = document.getElementById('quiz');
+  var st;
+
+  function reset() { st = { n: 0, level: 2, used: [], log: [], choice: null, conf: null, cur: null }; next(); }
+
+  function pick() {
+    var concept = CONCEPTS[st.n % 3];
+    var pool = BANK.filter(function (q, i) { return st.used.indexOf(i) < 0 && q.c === concept; });
+    if (!pool.length) pool = BANK.filter(function (q, i) { return st.used.indexOf(i) < 0; });
+    pool.sort(function (x, y) { return Math.abs(x.l - st.level) - Math.abs(y.l - st.level); });
+    var q = pool[0]; st.used.push(BANK.indexOf(q)); return q;
+  }
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function meter() {
+    var h = '<div class="meter" aria-label="Question ' + (st.n + 1) + ' of ' + TOTAL + '">';
+    for (var i = 0; i < TOTAL; i++) h += '<i class="' + (i <= st.n ? 'on' : '') + '"></i>';
+    return h + '</div>';
+  }
+
+  function next() {
+    if (st.n >= TOTAL) return profile();
+    st.cur = pick(); st.choice = null; st.conf = null;
+    var q = st.cur, lv = ['', 'Foundation', 'Core', 'Stretch'][q.l];
+    var h = '<div class="quiz-top"><span class="qmeta">' + q.c + ' · ' + lv + ' · Question ' + (st.n + 1) + ' of ' + TOTAL + '</span>' + meter() + '</div>';
+    h += '<p class="qtext">' + esc(q.q) + '</p><div class="opts">';
+    q.o.forEach(function (o, i) { h += '<button type="button" class="opt-btn" data-i="' + i + '" aria-pressed="false">' + esc(o) + '</button>'; });
+    h += '</div><div class="conf"><span>How sure are you?</span>' +
+      '<button type="button" class="btn ghost" data-conf="sure" disabled>I\'m sure</button>' +
+      '<button type="button" class="btn ghost" data-conf="unsure" disabled>Not sure</button></div>';
+    root.innerHTML = h;
+    root.querySelectorAll('.opt-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        st.choice = +b.dataset.i;
+        root.querySelectorAll('.opt-btn').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        root.querySelectorAll('[data-conf]').forEach(function (x) { x.disabled = false; });
+      });
+    });
+    root.querySelectorAll('[data-conf]').forEach(function (b) {
+      b.addEventListener('click', function () { st.conf = b.dataset.conf; reveal(); });
+    });
+  }
+
+  function reveal() {
+    var q = st.cur, ok = st.choice === q.a, sure = st.conf === 'sure';
+    st.log.push({ c: q.c, ok: ok, sure: sure, l: q.l });
+    root.querySelectorAll('.opt-btn').forEach(function (b) {
+      var i = +b.dataset.i; b.disabled = true;
+      if (i === q.a) b.classList.add('right'); else if (i === st.choice) b.classList.add('wrong');
+    });
+    root.querySelectorAll('[data-conf]').forEach(function (x) { x.disabled = true; });
+    var tag, msg, cls;
+    if (ok && sure) { cls = 'good'; tag = 'Secure understanding'; msg = 'Correct, and you knew it.'; }
+    else if (ok) { cls = 'good'; tag = 'Correct, but not yet confident'; msg = 'You got it right. Trust your reasoning, and look at the explanation to make it stick.'; }
+    else if (sure) { cls = 'warn'; tag = 'Possible misconception'; msg = 'You were sure, but this isn\'t right. Confident errors are worth slowing down for.'; }
+    else { cls = 'warn'; tag = 'Gap to work on'; msg = 'Not quite, and you sensed it. That honesty helps: here is the idea you need.'; }
+    st.level = Math.max(1, Math.min(3, st.level + (ok ? 1 : -1)));
+    var fb = document.createElement('div');
+    fb.className = 'feedback ' + cls;
+    fb.innerHTML = '<span class="tag">' + tag + '</span><span>' + msg + '</span><span><b>Why:</b> ' + esc(q.e) + '</span>';
+    root.appendChild(fb);
+    var act = document.createElement('div'); act.className = 'quiz-actions';
+    act.innerHTML = '<button type="button" class="btn primary">' + (st.n + 1 >= TOTAL ? 'See my learner profile' : 'Next question') + '</button>';
+    act.firstChild.addEventListener('click', function () { st.n++; next(); });
+    root.appendChild(act);
+    act.firstChild.focus();
+  }
+
+  function profile() {
+    var by = {}; CONCEPTS.forEach(function (c) { by[c] = { r: 0, t: 0 }; });
+    var k = { ss: 0, su: 0, ws: 0, wu: 0 };
+    st.log.forEach(function (x) {
+      by[x.c].t++; if (x.ok) by[x.c].r++;
+      if (x.ok && x.sure) k.ss++; else if (x.ok) k.su++; else if (x.sure) k.ws++; else k.wu++;
+    });
+    var score = st.log.filter(function (x) { return x.ok; }).length;
+    var h = '<div class="profile"><div><p class="eyebrow">Your learner profile</p><h4>' + score + ' of ' + TOTAL + ' correct, and here is what that means</h4></div><div class="bars">';
+    CONCEPTS.forEach(function (c) {
+      var p = by[c].t ? Math.round(100 * by[c].r / by[c].t) : 0;
+      h += '<div class="bar-row"><span>' + c + '</span><div class="bar"><b style="width:' + p + '%"></b></div><span class="pct">' + by[c].r + '/' + by[c].t + '</span></div>';
+    });
+    h += '</div><div class="calib">' +
+      '<div><b>' + k.ss + '</b><span>Correct and sure: secure understanding</span></div>' +
+      '<div><b>' + k.su + '</b><span>Correct but unsure: needs confidence</span></div>' +
+      '<div><b>' + k.ws + '</b><span>Wrong but sure: possible misconceptions</span></div>' +
+      '<div><b>' + k.wu + '</b><span>Wrong and unsure: gaps to teach</span></div></div>';
+    var tips = [];
+    var weakest = CONCEPTS.slice().sort(function (a, b) { return (by[a].r / (by[a].t || 1)) - (by[b].r / (by[b].t || 1)); })[0];
+    if (by[weakest].r < by[weakest].t) tips.push('Revisit <b>' + weakest + '</b> first. It has the most room to grow.');
+    if (k.ws) tips.push('Discuss the confident wrong answers with a teacher or peer. Misconceptions need talking through, not just the right answer.');
+    if (k.su) tips.push('You know more than you think. Short, regular practice will build confidence.');
+    if (score === TOTAL) tips.push('Excellent. Try explaining one of these ideas to someone else to deepen it further.');
+    h += '<div><p class="eyebrow" style="margin-bottom:0.5rem">Suggested next steps</p><ul class="next-steps"><li>' + tips.join('</li><li>') + '</li></ul></div>';
+    h += '<div class="quiz-actions" style="margin-top:0"><button type="button" class="btn ghost" id="quiz-again">Try again</button></div></div>';
+    root.innerHTML = h;
+    document.getElementById('quiz-again').addEventListener('click', reset);
+  }
+
+  reset();
+})();
+
+/* ---------- Demo 2: projectile simulation ---------- */
+(function () {
+  var G = 9.8, W = 100, H = 50; // world metres
+  var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+  var v = document.getElementById('v'), a = document.getElementById('a'), guess = document.getElementById('guess');
+  var vOut = document.getElementById('v-out'), aOut = document.getElementById('a-out');
+  var btn = document.getElementById('launch'), msg = document.getElementById('sim-msg');
+  var trails = [], anim = null, last = null;
+  var PAD = { l: 40, r: 14, t: 14, b: 30 }, CW = 720, CH = 380;
+  function fit() {
+    var w = cv.clientWidth || 720, dpr = window.devicePixelRatio || 1;
+    CW = w; CH = Math.round(w * (w < 500 ? 0.62 : 0.53));
+    cv.width = Math.round(CW * dpr); cv.height = Math.round(CH * dpr); cv.style.height = CH + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function css(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim() || '#888'; }
+  function sx(x) { return PAD.l + x / W * (CW - PAD.l - PAD.r); }
+  function sy(y) { return CH - PAD.b - y / H * (CH - PAD.t - PAD.b); }
+
+  function axes() {
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.font = '12px "IBM Plex Mono", monospace'; ctx.fillStyle = css('--muted'); ctx.strokeStyle = css('--line'); ctx.lineWidth = 1;
+    for (var x = 0; x <= W; x += 10) { ctx.beginPath(); ctx.moveTo(sx(x), sy(0)); ctx.lineTo(sx(x), sy(H)); ctx.stroke(); if (x % 20 === 0) ctx.fillText(x + ' m', sx(x) - 10, CH - 10); }
+    for (var y = 0; y <= H; y += 10) { ctx.beginPath(); ctx.moveTo(sx(0), sy(y)); ctx.lineTo(sx(W), sy(y)); ctx.stroke(); if (y) ctx.fillText(y, 8, sy(y) + 4); }
+    ctx.strokeStyle = css('--ink'); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx(0), sy(0)); ctx.lineTo(sx(W), sy(0)); ctx.stroke();
+  }
+
+  function path(vv, deg, upto) {
+    var th = deg * Math.PI / 180, T = 2 * vv * Math.sin(th) / G, pts = [], end = Math.min(upto, T);
+    for (var t = 0; t <= end + 1e-9; t += T / 120) pts.push([vv * Math.cos(th) * t, vv * Math.sin(th) * t - 0.5 * G * t * t]);
+    return pts;
+  }
+
+  function drawPts(pts, color, width, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+    ctx.beginPath(); pts.forEach(function (p, i) { var X = sx(p[0]), Y = sy(Math.max(0, p[1])); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  function marker(xm, color, label, hy) {
+    hy = hy || 8;
+    if (isNaN(xm)) return;
+    var X = sx(Math.min(W, Math.max(0, xm)));
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(X, sy(0)); ctx.lineTo(X, sy(hy)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = color; ctx.font = '12px "IBM Plex Sans", sans-serif'; ctx.fillText(label, Math.min(X + 4, CW - 70), sy(hy) - 4);
+  }
+
+  function scene(cur, ball) {
+    axes();
+    trails.forEach(function (t) { drawPts(t.pts, css('--muted'), 1.2, [3, 4]); });
+    var g = parseFloat(guess.value);
+    if (!isNaN(g)) marker(g, css('--signal'), 'your guess', 14);
+    if (!cur && last) { cur = last.pts; }
+    if (cur) drawPts(cur, css('--accent'), 2.5);
+    if (!ball && last && cur === last.pts) marker(last.R, css('--accent'), 'actual');
+    if (ball) { ctx.fillStyle = css('--accent'); ctx.beginPath(); ctx.arc(sx(ball[0]), sy(Math.max(0, ball[1])), 6, 0, 7); ctx.fill(); }
+  }
+
+  function sync(e) { if (e && e.target !== guess) last = null; vOut.textContent = v.value + ' m/s'; aOut.textContent = a.value + '°'; if (!anim) scene(); }
+  [v, a, guess].forEach(function (el) { el.addEventListener('input', sync); });
+
+  btn.addEventListener('click', function () {
+    if (anim) return;
+    var vv = +v.value, deg = +a.value, th = deg * Math.PI / 180;
+    var T = 2 * vv * Math.sin(th) / G, R = vv * vv * Math.sin(2 * th) / G, Hm = vv * vv * Math.pow(Math.sin(th), 2) / (2 * G);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var start = null, dur = reduce ? 0 : Math.max(900, T * 450);
+    btn.disabled = true; msg.textContent = 'Launching…';
+    function step(ts) {
+      if (start === null) start = ts;
+      var f = dur ? Math.min(1, (ts - start) / dur) : 1, t = f * T;
+      var pts = path(vv, deg, t), tip = pts[pts.length - 1];
+      scene(pts, tip);
+      if (f < 1) { anim = requestAnimationFrame(step); return; }
+      anim = null; btn.disabled = false;
+      trails.push({ pts: path(vv, deg, T) }); if (trails.length > 6) trails.shift();
+      last = { pts: path(vv, deg, T), R: R }; scene();
+      document.getElementById('r-range').textContent = R.toFixed(1) + ' m';
+      document.getElementById('r-height').textContent = Hm.toFixed(1) + ' m';
+      document.getElementById('r-time').textContent = T.toFixed(2) + ' s';
+      var g = parseFloat(guess.value);
+      if (isNaN(g)) msg.textContent = 'Range ' + R.toFixed(1) + ' m. Next time, enter a prediction first. Committing to a guess makes the result more meaningful.';
+      else {
+        var err = Math.abs(g - R), pct = R ? Math.round(100 * err / R) : 0;
+        msg.textContent = err <= Math.max(2, R * 0.1)
+          ? 'Great prediction: within ' + err.toFixed(1) + ' m. Can you explain why it lands there?'
+          : 'You predicted ' + g + ' m and it landed at ' + R.toFixed(1) + ' m (' + pct + '% off). What would you change in your reasoning? Try 30° and 60° at the same speed.';
+      }
+    }
+    anim = requestAnimationFrame(step);
+  });
+
+  if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { scene(); });
+  window.addEventListener('resize', function () { if (!anim) { fit(); scene(); } });
+  fit();
+  sync();
+})();
+</script>
+</body>
+</html>
