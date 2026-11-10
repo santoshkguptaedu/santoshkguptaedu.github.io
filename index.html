@@ -110,12 +110,12 @@ p { margin: 0; }
 .hero h1 { font-size: var(--step-4); line-height: 1.05; margin-top: 0.75rem; }
 .id-row { display: flex; align-items: center; gap: 1.5rem; }
 .portrait {
-  flex: none; width: 11.5rem; height: auto; aspect-ratio: 600 / 671; border-radius: 14px; object-fit: cover;
+  flex: none; width: 11.5rem; height: 11.5rem; border-radius: 50%; object-fit: cover;
   border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--line), 0 6px 18px rgba(26, 30, 48, 0.12);
 }
 @media (max-width: 520px) {
   .id-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .portrait { width: 10rem; height: auto; }
+  .portrait { width: 9.5rem; height: 9.5rem; }
 }
 .id-row h1 { font-size: clamp(2.25rem, 2.4vw + 1rem, 3.25rem); }
 .lede { font-family: var(--font-display); font-size: var(--step-2); line-height: 1.35; margin-top: 1.25rem; max-width: 34ch; }
@@ -327,7 +327,7 @@ section.block { padding-block: 4rem; border-bottom: 1px solid var(--line); }
     <div class="wrap">
       <div>
         <div class="id-row">
-          <img class="portrait" src="photo.jpg?v=3" width="600" height="671" alt="Portrait of Santosh Kumar Gupta">
+          <img class="portrait" src="photo.jpg?v=4" width="600" height="600" alt="Portrait of Santosh Kumar Gupta">
           <div>
             <p class="eyebrow">PhD Research Scholar &middot; University of Hyderabad</p>
             <h1>Santosh Kumar Gupta</h1>
